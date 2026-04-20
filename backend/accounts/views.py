@@ -4,16 +4,34 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+@api_view(["POST"])
+def register(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    email = request.data.get("email")
+
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "User exists"}, status=400)
+
+    user = User.objects.create_user(username=username, password=password, email=email)
+
+    return Response({"message": "User created"})
 
 
 # REGISTER
-@api_view(["POST"])
-def register(request):
-    user = User.objects.create_user(
-        username=request.data["username"], password=request.data["password"]
-    )
-    return Response({"message": "User created"})
+# @api_view(["POST"])
+# def register(request):
+#     user = User.objects.create_user(
+#         username=request.data["username"], password=request.data["password"]
+#     )
+#     return Response({"message": "User created"})
 
 
 # LOGIN
