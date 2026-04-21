@@ -42,14 +42,14 @@ async def register(request):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        # 🔹 1. Required fields validation
+        # 1. Required fields validation
         if not username or not email or not password:
             return Response(
                 {"status": "error", "message": "All fields are required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # 🔹 2. Email validation
+        # 2. Email validation
         try:
             validate_email(email)
         except ValidationError:
@@ -58,7 +58,7 @@ async def register(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # 🔹 3. Password validation (basic)
+        # 3. Password validation (basic)
         if len(password) < 6:
             return Response(
                 {
