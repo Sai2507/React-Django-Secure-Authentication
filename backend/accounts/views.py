@@ -86,7 +86,7 @@ async def register(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # 🔹 4. Check if user exists
+        # 4. Check if user exists
         exists = await sync_to_async(User.objects.filter(username=username).exists)()
         if exists:
             return Response(
@@ -94,12 +94,12 @@ async def register(request):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # 🔹 5. Create user (hashed + salted)
+        # 5. Create user (hashed + salted)
         user = await sync_to_async(User.objects.create_user)(
             username=username, email=email, password=password
         )
 
-        # 🔹 6. Generate JWT
+        # 6. Generate JWT
         refresh = RefreshToken.for_user(user)
 
         return Response(
@@ -116,7 +116,7 @@ async def register(request):
         )
 
     except Exception as e:
-        # 🔥 Global error handling
+        # Global error handling
         return Response(
             {
                 "status": "error",
